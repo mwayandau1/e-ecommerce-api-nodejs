@@ -7,17 +7,20 @@ const connectDB = require('./db/connect')
 //COOKIE
 //OTHER IMPORTS
 const morgan = require('morgan')
-const cookieParse = require('cookie-parser');
+const cookieParser = require('cookie-parser');
 
 //MIDDLEWARE
 const notFoundMiddleWare = require('./middleware/not-found')
 const errorHandlerMiddleWare = require('./middleware/error-handler')
 //ROUTES
 const authRoutes = require('./routes/authRoutes')
+const userRoutes = require('./routes/userRoutes')
 app.use(morgan('tiny'))
 app.use(express.json())
+app.use(cookieParser(process.env.JWT_SECRET))
 
 app.use('/api/v1/auth', authRoutes)
+app.use('/api/v1/users', userRoutes)
 
 app.get('/', (req, res)=>{
     res.send('hello welcome to this ecommerce project')
