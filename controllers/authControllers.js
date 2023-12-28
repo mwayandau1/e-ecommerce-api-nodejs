@@ -1,7 +1,9 @@
 const {StatusCodes} = require('http-status-codes')
 const User = require('../models/UserModel')
 const {BadRequestError, UnauthenticatedError} = require('../errors')
-const {createToken, attachCookiesToResponse} = require('../utils/jwt')
+const { attachCookiesToResponse} = require('../utils/jwt')
+const obtainTokenUser = require('../utils/tokenUser')
+
 const register = async(req, res)=>{
 
     const {name, password, email} = req.body;
@@ -12,13 +14,15 @@ const register = async(req, res)=>{
     if(userAlreadyExist){
         throw new BadRequestError("User with email already exist.")
     }
-    const isFirstUser = (await User.countDocuments({}))==0
+    const isFirstUser = (await User.countDocuments({}))===0
     const role = isFirstUser ? "admin" :"user"
     const user = await User.create({name, email, password, role})
-    const tokenUser = {name:user.name, id:user._id, role:user.role}
+    const tokenUser = obtainTokenUser(user)
     attachCookiesToResponse({res, user:tokenUser})
-    res.status(StatusCodes.CREATED).json({user})
+    res.status(StatusCodes.CREATED).json({user:tokenUser})
 }
+
+
 const login = async(req, res)=>{
     const {email, password} = req.body;
     if(!email || !password){
@@ -32,9 +36,9 @@ const login = async(req, res)=>{
     if(!isPasswordCorrect){
         throw new UnauthenticatedError("Invalid credentials")
     }
-    const tokenUser = {name:user.name, id:user._id, role:user.role}
+    const tokenUser = obtainTokenUser(user)
     attachCookiesToResponse({res, user:tokenUser })
-    res.status(StatusCodes.OK).json({user})
+    res.status(StatusCodes.OK).json({user:tokenUser})
 }
 
 
