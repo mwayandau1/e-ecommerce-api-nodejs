@@ -14,10 +14,11 @@ const fileUpload = require('express-fileupload')
 const notFoundMiddleWare = require('./middleware/not-found')
 const errorHandlerMiddleWare = require('./middleware/error-handler')
 //ROUTES
-const authRoutes = require('./routes/authRoutes')
-const userRoutes = require('./routes/userRoutes')
+const authRoute = require('./routes/authRoutes')
+const userRoute = require('./routes/userRoutes')
 const productRoute = require('./routes/productRoute')
-const reviewRoute = require('./routes/reviewRoute')
+const reviewRoute = require('./routes/reviewRoute');
+const orderRoute = require('./routes/orderRoute')
 
 
 app.use(morgan('tiny'))
@@ -25,10 +26,11 @@ app.use(express.json())
 app.use(cookieParser(process.env.JWT_SECRET))
 app.use(express.static('/public'))
 app.use(fileUpload())
-app.use('/api/v1/auth', authRoutes)
-app.use('/api/v1/users', userRoutes)
+app.use('/api/v1/auth', authRoute)
+app.use('/api/v1/users', userRoute)
 app.use('/api/v1/products', productRoute)
-app.use('/api/v1/reviews', reviewRoute)
+app.use('/api/v1/reviews', reviewRoute);
+app.use('/api/v1/order', orderRoute)
 
 app.get('/', (req, res)=>{
     res.send('hello welcome to this ecommerce project')
