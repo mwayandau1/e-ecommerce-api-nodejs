@@ -10,11 +10,10 @@ const createReview = async(req, res)=>{
     if(!isProductAvailable){
         throw new NotFoundError(`No product with id:${productId} exist`)
     }
-    const alreadySubmitted = await Review.findOne({product:productId,
-        user:req.user.id})
-        if(alreadySubmitted){
-            throw new BadRequestError("You have submitted a review already")
-        }
+    const alreadySubmitted = await Review.findOne({product:productId, user:req.user.id})
+    if(alreadySubmitted){
+        throw new BadRequestError("You have submitted a review already")
+    }
     req.body.user = req.user.id
     const product = await Review.create(req.body)
     res.status(StatusCodes.CREATED).json({product})

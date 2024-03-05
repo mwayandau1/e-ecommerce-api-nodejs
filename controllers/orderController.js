@@ -9,6 +9,7 @@ const fakeStripeAPI = async ({amount, currency})=>{
     const clientSecret = "someNumberStripe"
     return {clientSecret, amount}
 }
+
 const createOrder = async(req, res)=>{
     const {items:cartItems, shippingFee, tax} = req.body;
     if(!cartItems || cartItems.length <1){

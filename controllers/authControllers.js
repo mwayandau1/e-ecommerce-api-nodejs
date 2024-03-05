@@ -12,7 +12,7 @@ const register = async(req, res)=>{
     }
     const userAlreadyExist = await User.findOne({email})
     if(userAlreadyExist){
-        throw new BadRequestError("User with email already exist.")
+        throw new BadRequestError("This email is already in use.")
     }
     const isFirstUser = (await User.countDocuments({}))===0
     const role = isFirstUser ? "admin" :"user"
@@ -30,7 +30,7 @@ const login = async(req, res)=>{
     }
     const user = await User.findOne({email})
     if(!user){
-        throw new UnauthenticatedError("User with email does not exist")
+        throw new UnauthenticatedError("Invalid Credentials")
     }
     const isPasswordCorrect = await user.comparePassword(password)
     if(!isPasswordCorrect){
